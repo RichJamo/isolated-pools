@@ -609,7 +609,7 @@ export const globalConfig: NetworkConfig = {
         symbol: "USDT",
         decimals: 6,
         tokenAddress: "0xA11c8D9DC9b66E209Ef60F0C8D969D3CD988782c",
-        faucetInitialLiquidity: false,
+        faucetInitialLiquidity: true,
       },
       {
         isMock: false,
