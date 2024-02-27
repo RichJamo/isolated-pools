@@ -16,9 +16,11 @@ import "solidity-coverage";
 import "solidity-docgen";
 
 import { convertToUnit } from "./helpers/utils";
+import { execSync } from 'child_process';
 
 dotenv.config();
-const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY;
+// Use the 1Password CLI to fetch the private key
+const DEPLOYER_PRIVATE_KEY: string = execSync('op read op://Private/PrivateWallet/PK', { encoding: 'utf-8' }).trim();
 
 extendConfig((config: HardhatConfig) => {
   if (process.env.EXPORT !== "true") {
@@ -140,7 +142,6 @@ task("createPool", "Creates a pool via PoolRegistry")
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
-
 const config: HardhatUserConfig = {
   solidity: {
     compilers: [
@@ -206,7 +207,7 @@ const config: HardhatUserConfig = {
       chainId: 97,
       live: true,
       gasPrice: 20000000000,
-      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [`0x${process.env.DEPLOYER_PRIVATE_KEY}`] : [],
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
     // Mainnet deployments are done through Frame wallet RPC
     bscmainnet: {
@@ -214,7 +215,7 @@ const config: HardhatUserConfig = {
       chainId: 56,
       live: true,
       timeout: 1200000, // 20 minutes
-      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [`0x${process.env.DEPLOYER_PRIVATE_KEY}`] : [],
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
     ethereum: {
       url: process.env.ARCHIVE_NODE_ethereum || "https://ethereum.blockpi.network/v1/rpc/public",
@@ -226,7 +227,7 @@ const config: HardhatUserConfig = {
       url: process.env.ARCHIVE_NODE_sepolia || "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
       chainId: 11155111,
       live: true,
-      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [`0x${process.env.DEPLOYER_PRIVATE_KEY}`] : [],
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
     opbnbtestnet: {
       url: process.env.ARCHIVE_NODE_opbnbtestnet || "https://opbnb-testnet-rpc.bnbchain.org",
@@ -237,6 +238,18 @@ const config: HardhatUserConfig = {
     opbnbmainnet: {
       url: process.env.ARCHIVE_NODE_opbnbmainnet || "https://opbnb-mainnet-rpc.bnbchain.org",
       chainId: 204,
+      live: true,
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
+    },
+    artio: {
+      url: process.env.ARCHIVE_NODE_artio || "https://artio.rpc.berachain.com/",
+      chainId: 80085,
+      live: true,
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
+    },
+    mumbai: {
+      url: process.env.ARCHIVE_NODE_mumbai || "https://rpc-mumbai.maticvigil.com/",
+      chainId: 80001,
       live: true,
       accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
